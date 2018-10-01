@@ -1,4 +1,5 @@
 #include <string>
+#include <iostream>
 
 #ifndef _ENVELOPEADSR_h
 #define _ENVELOPEADSR_h
@@ -33,8 +34,6 @@ public:
 
     // Destructor
     ~EnvelopeADSR();
-
-protected:
 
 };
 

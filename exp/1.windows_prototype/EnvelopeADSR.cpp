@@ -1,7 +1,5 @@
-#include <iostream>
-#include <string>
-#include "EnvelopeADSR.h"
-
+#include "envelopeADSR.h"
+#include "constants.h"
 
 EnvelopeADSR::EnvelopeADSR() {
     // Constructor, properties initialization
@@ -28,12 +26,15 @@ void EnvelopeADSR::Create(double dSA,
     double dSL,
     double dRT, 
     std::string sInstrument) {
-    // Initialization of envelop object
+
+    // ADSR model
     this->dStartAmplitude = dSA;
     this->dAttackTime = dAT;
     this->dDecayTime = dDT;
     this->dSustainLevel = dSL;
     this->dReleaseTime = dRT;
+
+    // Notes information
     this->dTriggerOffTime = 0.0;
     this->dTriggerOnTime = 0.0;
     this->bNoteOn = false;
@@ -43,6 +44,7 @@ void EnvelopeADSR::Create(double dSA,
 
 
 int EnvelopeADSR::NoteOn(double dTimeOn) {
+    /*NOTEOFF store the time in which a note is pressed.*/
     if (this->bIsCreated == false)
         return 1;
 
@@ -53,6 +55,7 @@ int EnvelopeADSR::NoteOn(double dTimeOn) {
 
 
 int EnvelopeADSR::NoteOff(double dTimeOff) {
+    /*NOTEOFF store the time in which a note is released.*/
     if (this->bIsCreated == false)
         return 1;
 
@@ -63,6 +66,10 @@ int EnvelopeADSR::NoteOff(double dTimeOff) {
 
 
 double EnvelopeADSR::GetAmplitude(double dTime) {
+    /* GETAMPLITUDE returns the amplitude of the wave in a certain time. It is
+    obtained according to ADSR model. It is checked whether the note is pressed
+    or released to proceed accordingly.*/
+
     if (this->bIsCreated == false)
         return 1.0;
 
@@ -99,7 +106,7 @@ double EnvelopeADSR::GetAmplitude(double dTime) {
     }
 
     // Amplitude should not be negative
-    if (dAmplitude <= 0.0001)
+    if (dAmplitude <= MINIMUM_AMPLITUDE)
         dAmplitude = 0.0;
 
 
@@ -108,12 +115,13 @@ double EnvelopeADSR::GetAmplitude(double dTime) {
 
 
 bool EnvelopeADSR::IsCreated(void) {
+    /* ISCREATED returns whether the enveloped has already been created.*/
     return this->bIsCreated;
 }
 
 
 int EnvelopeADSR::Print(void) {
-
+    /* PRINT prints the envelope characteristics. */
     std::cout << 
         "\nENVELOPE:          " << this->sInstrument <<
         "\nStart amplitude:   " << this->dStartAmplitude <<
